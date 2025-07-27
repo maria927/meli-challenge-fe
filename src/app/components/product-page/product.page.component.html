@@ -1,0 +1,80 @@
+<div class="container" *ngIf="product">
+  <div class="grid grid-cols-3">
+    <!-- Product Images -->
+    <div>
+      <app-product-image-gallery [images]="product.images"></app-product-image-gallery>
+    </div>
+
+    <!-- Product Information -->
+    <div>
+      <app-product-info [product]="product"></app-product-info>
+    </div>
+
+    <!-- Purchase Options -->
+    <div>
+      <div class="card" style="padding: 20px;">
+        <div class="price">
+          {{ product.currency }} {{ product.price }}
+          <span class="discount" *ngIf="product.discount">{{ product.discount }}% OFF</span>
+        </div>
+        
+        <div *ngIf="product.originalPrice" style="color: #999; text-decoration: line-through; font-size: 14px; margin-top: 4px;">
+          {{ product.currency }} {{ product.originalPrice }}
+        </div>
+
+        <div *ngIf="product.installments" class="installments" style="margin-top: 8px;">
+          en {{ product.installments.count }} cuotas de {{ product.installments.currency }} {{ product.installments.amount }} sin interés
+        </div>
+
+        <div class="shipping-info">
+          <h4>{{ product.shipping.location }}</h4>
+          <p style="font-size: 14px; color: #666;">{{ product.shipping.estimatedDays }}</p>
+        </div>
+
+        <div style="margin: 16px 0;">
+          <span class="stock-available">Stock disponible</span>
+          <div style="font-size: 14px; color: #666; margin-top: 4px;">
+            Cantidad: {{ product.stock }} unidad ({{ product.stock > 50 ? '+50' : product.stock }} disponibles)
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+          <button class="btn btn-primary" style="width: 100%;">Comprar ahora</button>
+          <button class="btn btn-secondary" style="width: 100%;">Agregar al carrito</button>
+        </div>
+
+        <div class="payment-methods">
+          <div *ngFor="let method of product.paymentMethods" class="payment-method">
+            {{ method.name }}
+          </div>
+        </div>
+
+        <div class="seller-info">
+          <div>
+            <div style="font-weight: 600;">Tienda oficial: {{ product.seller.name }}</div>
+            <div class="seller-badge" *ngIf="product.seller.isOfficial">{{ product.seller.reputation }}</div>
+            <div style="font-size: 12px; color: #666; margin-top: 4px;">
+              +{{ product.seller.salesCount | number }} ventas
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px; padding: 12px; background: #f8f9fa; border-radius: 6px;">
+          <div style="font-size: 14px; color: #00a650; margin-bottom: 4px;">✓ Devolución gratis. Tienes 30 días desde que lo recibes.</div>
+          <div style="font-size: 14px; color: #00a650; margin-bottom: 4px;">✓ Compra Protegida, recibe el producto que esperabas o te devolvemos tu dinero.</div>
+          <div style="font-size: 14px; color: #00a650;">✓ 12 meses de garantía de fábrica.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Specifications -->
+  <div style="margin-top: 40px;">
+    <app-product-specs [product]="product"></app-product-specs>
+  </div>
+
+  <!-- Related Products -->
+  <div style="margin-top: 40px;">
+    <app-related-products [products]="relatedProducts"></app-related-products>
+  </div>
+</div>
