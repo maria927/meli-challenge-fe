@@ -82,6 +82,11 @@ body {
   font-weight: 500;
 }
 
+.stock-unavailable {
+  color: #a61e00;
+  font-weight: 500;
+}
+
 .grid {
   display: grid;
   gap: 20px;
@@ -154,6 +159,7 @@ body {
   border-radius: 4px;
   font-size: 12px;
   color: #666;
+  display: block;
 }
 
 .seller-info {
@@ -167,7 +173,6 @@ body {
 }
 
 .seller-badge {
-  background: #ffd700;
   color: #333;
   padding: 4px 8px;
   border-radius: 4px;

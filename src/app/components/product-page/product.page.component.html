@@ -25,7 +25,7 @@
   <div class="grid grid-cols-3">
     <!-- Product Images -->
     <div>
-      <app-product-image-gallery [images]="product.images"></app-product-image-gallery>
+      <app-product-image-gallery [images]="product.pictures"></app-product-image-gallery>
     </div>
 
     <!-- Product Information -->
@@ -36,29 +36,39 @@
     <!-- Purchase Options -->
     <div>
       <div class="card" style="padding: 20px;">
-        <div class="price">
-          {{ product.currency }} {{ product.price }}
+
+        <div class="price" *ngIf="product.discount > 0">
+          {{ product.price.currency }} {{ (product.price.amount - ((product.price.amount * product.discount) / 100)).toFixed(2) }}
           <span class="discount" *ngIf="product.discount">{{ product.discount }}% OFF</span>
         </div>
+
+        <div class="price" *ngIf="product.discount === 0">
+          {{ product.price.currency }} {{ product.price.amount.toFixed(2) }}
+        </div>
         
-        <div *ngIf="product.originalPrice" style="color: #999; text-decoration: line-through; font-size: 14px; margin-top: 4px;">
-          {{ product.currency }} {{ product.originalPrice }}
+        <div *ngIf="product.discount > 0" style="color: #999; text-decoration: line-through; font-size: 14px; margin-top: 4px;">
+          {{ product.price.currency }} {{ product.price.amount }}
         </div>
 
-        <div *ngIf="product.installments" class="installments" style="margin-top: 8px;">
-          en {{ product.installments.count }} cuotas de {{ product.installments.currency }} {{ product.installments.amount }} sin interés
+        <div class="installments" style="margin-top: 8px;">
+          en {{ product.installments.count }} cuotas de {{ product.installments.currency }} {{ product.installments.amount }}
+          <span *ngIf="product.installments.interestFree"> sin interés</span>
         </div>
 
         <div class="shipping-info">
-          <h4>{{ product.shipping.location }}</h4>
-          <p style="font-size: 14px; color: #666;">{{ product.shipping.estimatedDays }}</p>
+          <h4 *ngIf="product.shipping.freeShipping">Envío gratis</h4>
+          <p style="font-size: 14px; color: #666;">Tiempo estimado de entrega: {{ product.shipping.estimatedDelivery }}</p>
         </div>
 
         <div style="margin: 16px 0;">
-          <span class="stock-available">Stock disponible</span>
+          <span class="stock-available" *ngIf="product.stock > 0">Stock disponible</span>
           <div style="font-size: 14px; color: #666; margin-top: 4px;">
-            Cantidad: {{ product.stock }} unidad ({{ product.stock > 50 ? '+50' : product.stock }} disponibles)
+            Cantidad: {{ product.stock }} unidades disponibles
           </div>
+        </div>
+
+        <div style="margin: 16px 0;">
+          <span class="stock-unavailable" *ngIf="product.stock == 0">No hay stock disponible</span>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
@@ -66,18 +76,42 @@
           <button class="btn btn-secondary" style="width: 100%;">Agregar al carrito</button>
         </div>
 
-        <div class="payment-methods">
-          <div *ngFor="let method of product.paymentMethods" class="payment-method">
-            {{ method.name }}
+        <div class="payment-methods" style="margin-top: 16px;">
+          <div style="margin-bottom: 8px;">
+            <strong>Tarjetas de crédito:</strong>
+            <span *ngFor="let method of product.paymentMethods.credit; let last = last" class="payment-method">
+              {{ method }}<span *ngIf="!last">, </span>
+            </span>
+          </div>
+          <div style="margin-bottom: 8px;">
+            <strong>Tarjetas de débito:</strong>
+            <span *ngFor="let method of product.paymentMethods.debit; let last = last" class="payment-method">
+              {{ method }}<span *ngIf="!last">, </span>
+            </span>
+          </div>
+          <div>
+            <strong>Efectivo:</strong>
+            <span *ngFor="let method of product.paymentMethods.cash; let last = last" class="payment-method">
+              {{ method }}<span *ngIf="!last">, </span>
+            </span>
           </div>
         </div>
 
-        <div class="seller-info">
-          <div>
-            <div style="font-weight: 600;">Tienda oficial: {{ product.seller.name }}</div>
-            <div class="seller-badge" *ngIf="product.seller.isOfficial">{{ product.seller.reputation }}</div>
+<div class="seller-info">
+  <div>
+    <div style="font-weight: 600;">Tienda oficial: {{ product.seller.name }}</div>
+
+            <div
+              class="seller-badge"
+              *ngIf="product.seller.reputation"
+              [ngStyle]="{ 'background-color': getReputationInfo(product.seller.reputation).color }"
+              style="padding: 4px 8px; border-radius: 4px; font-weight: 500;"
+            >
+              {{ getReputationInfo(product.seller.reputation).mensaje }}
+            </div>
+
             <div style="font-size: 12px; color: #666; margin-top: 4px;">
-              +{{ product.seller.salesCount | number }} ventas
+              {{ product.seller.salesCount | number }} ventas | {{ product.seller.location }}
             </div>
           </div>
         </div>

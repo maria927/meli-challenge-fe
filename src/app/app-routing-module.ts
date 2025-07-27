@@ -3,9 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { ProductPageComponent } from './components/product-page/product.page.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/product/samsung-galaxy-a55-5g', pathMatch: 'full' },
+  { path: '', redirectTo: '/product/ML1', pathMatch: 'full' },
   { path: 'product/:id', component: ProductPageComponent },
-  { path: '**', redirectTo: '/product/samsung-galaxy-a55-5g' }
+  { path: '**', redirectTo: '/product/ML1' }
 ];
 
 @NgModule({

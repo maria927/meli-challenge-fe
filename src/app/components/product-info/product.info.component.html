@@ -1,6 +1,6 @@
 <div class="product-info">
   <div class="product-status" style="font-size: 14px; color: #666; margin-bottom: 8px;">
-    Nuevo | +300 vendidos
+    {{ product.condition === 'new' ? 'Nuevo' : 'Usado' }} | {{ product.soldQuantity }} vendidos
   </div>
 
   <h1 class="product-title" style="font-size: 24px; font-weight: 600; margin-bottom: 16px; line-height: 1.3;">
@@ -22,25 +22,16 @@
   <div class="product-highlights" style="margin-bottom: 24px;">
     <h3 class="section-title">Lo que tienes que saber de este producto</h3>
     <ul style="list-style: none; padding: 0;">
-      <li style="padding: 4px 0; color: #666;">• Memoria RAM: 8 GB</li>
-      <li style="padding: 4px 0; color: #666;">• Dispositivo desbloqueado para que lo conectes a cualquier compañía telefónica preferida.</li>
-      <li style="padding: 4px 0; color: #666;">• Memoria interna de 256 GB.</li>
-      <li style="padding: 4px 0; color: #666;">• Cámara de 50 Mpx.</li>
-      <li style="padding: 4px 0; color: #666;">• Procesador Samsung Exynos 1480.</li>
+      <li *ngFor="let characteristic of product.characteristics" style="padding: 4px 0; color: #666;">
+        • {{ characteristic }}
+      </li>
     </ul>
-  </div>
-
-  <div class="color-selection" style="margin-bottom: 24px;">
-    <h4>Color: azul oscuro</h4>
-    <div style="display: flex; gap: 8px; margin-top: 8px;">
-      <div style="width: 40px; height: 40px; background: #1e3a8a; border-radius: 50%; border: 2px solid #3483fa; cursor: pointer;"></div>
-    </div>
   </div>
 
   <div class="purchase-options" style="margin-bottom: 24px;">
     <h4>Opciones de compra:</h4>
     <div style="margin-top: 8px; font-size: 14px; color: #3483fa;">
-      🛒 Samsung Galaxy Oficial US$ 439
+      🛒 {{ product.seller.name }}
     </div>
   </div>
 </div>

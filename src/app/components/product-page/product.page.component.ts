@@ -73,4 +73,17 @@ export class ProductPageComponent implements OnInit, OnDestroy {
       this.loadProduct(this.productId);
     }
   }
+
+  getReputationInfo(reputation: string): { mensaje: string, color: string } {
+  switch (reputation?.toLowerCase()) {
+    case 'alta':
+      return { mensaje: 'Entrega sus productos a tiempo', color: '#d4edda' };
+    case 'media':
+      return { mensaje: 'Brinda buena atención', color: '#fff3cd' };
+    case 'baja':
+      return { mensaje: 'No brinda buena atención', color: '#f8d7da' };
+    default:
+      return { mensaje: 'Sin reputación', color: '#f0f0f0' };
+  }
+}
 }
