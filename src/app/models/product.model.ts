@@ -2,26 +2,47 @@ export interface Product {
   id: string;
   title: string;
   description: string;
-  price: number;
-  originalPrice?: number;
-  discount?: number;
-  currency: string;
-  images: string[];
+  price: Price;
+  discount: number;
+  pictures: string[];
+  condition: string;
+  soldQuantity: number;
+  stock: number;
   rating: number;
   reviewCount: number;
-  stock: number;
+  installments: InstallmentInfo;
+  paymentMethods: PaymentMethods;
   seller: Seller;
+  characteristics: string[];
   specifications: Specification[];
-  paymentMethods: PaymentMethod[];
   shipping: ShippingInfo;
-  installments?: InstallmentInfo;
+}
+
+export interface Price {
+  currency: string;
+  amount: number;
+  decimals: number;
+}
+
+export interface InstallmentInfo {
+  count: number;
+  amount: number;
+  currency: string;
+  interestFree: boolean;
+}
+
+export interface PaymentMethods {
+  credit: string[];
+  debit: string[];
+  cash: string[];
 }
 
 export interface Seller {
+  id: string;
   name: string;
   reputation: string;
-  isOfficial: boolean;
   salesCount: number;
+  location: string;
 }
 
 export interface Specification {
@@ -29,20 +50,7 @@ export interface Specification {
   value: string;
 }
 
-export interface PaymentMethod {
-  type: string;
-  name: string;
-  icon?: string;
-}
-
 export interface ShippingInfo {
-  isFree: boolean;
-  estimatedDays: string;
-  location: string;
-}
-
-export interface InstallmentInfo {
-  count: number;
-  amount: number;
-  currency: string;
+  freeShipping: boolean;
+  estimatedDelivery: string;
 }
