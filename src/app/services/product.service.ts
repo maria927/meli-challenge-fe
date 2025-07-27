@@ -1,17 +1,29 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { Product } from '../models/product.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
+  private apiUrl = 'http://localhost:8080/meli-products/api/v1';
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  getProduct(): Observable<Product> {
+  getProductById(id: string): Observable<Product> {
+    return this.http.get<Product>(`${this.apiUrl}/products/${id}`).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.warn('API call failed, falling back to mock data:', error.message);
+        return this.getMockProduct(id);
+      })
+    );
+  }
+
+  private getMockProduct(id: string): Observable<Product> {
     const mockProduct: Product = {
-      id: 'samsung-galaxy-a55-5g',
+      id: id,
       title: 'Samsung Galaxy A55 5G Dual SIM 256 GB azul oscuro 8 GB RAM',
       description: `Con su potente procesador y 8 GB de RAM, su computadora logrará un alto rendimiento 
       con una alta velocidad de transmisión de contenido y ejecutar varias aplicaciones al mismo tiempo, sin demoras.
@@ -25,7 +37,6 @@ export class ProductService {
       images: [
         'https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg',
         'https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg',
-        'https://images.pexels.com/photos/163065/mobile-phone-android-apps-163065.jpeg',
         'https://images.pexels.com/photos/1092671/pexels-photo-1092671.jpeg'
       ],
       rating: 4.5,
@@ -67,55 +78,7 @@ export class ProductService {
     return of(mockProduct);
   }
 
-  getRelatedProducts(): Observable<Product[]> {
-    const relatedProducts: Product[] = [
-      {
-        id: 'samsung-m55-5g',
-        title: 'Samsung Galaxy M55 5G 256GB Dual SIM Teletrabajo',
-        price: 421,
-        currency: 'US$',
-        images: ['https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg'],
-        rating: 4.3,
-        reviewCount: 120,
-        stock: 5,
-        description: '',
-        seller: { name: 'Samsung', reputation: 'Tienda oficial', isOfficial: true, salesCount: 50000 },
-        specifications: [],
-        paymentMethods: [],
-        shipping: { isFree: true, estimatedDays: '3-5 días', location: 'Envío gratis' }
-      },
-      {
-        id: 'motorola-edge-50',
-        title: 'Motorola Edge 50 Fusion 5g 256 Gb Azul Ártico 8 Gb Ram',
-        price: 419,
-        currency: 'US$',
-        images: ['https://images.pexels.com/photos/163065/mobile-phone-android-apps-163065.jpeg'],
-        rating: 4.2,
-        reviewCount: 85,
-        stock: 3,
-        description: '',
-        seller: { name: 'Motorola', reputation: 'Tienda oficial', isOfficial: true, salesCount: 30000 },
-        specifications: [],
-        paymentMethods: [],
-        shipping: { isFree: true, estimatedDays: '3-5 días', location: 'Envío gratis' }
-      },
-      {
-        id: 'samsung-a36-5g',
-        title: 'Samsung Galaxy A36 5g 8gb 256GB Negro Titanio',
-        price: 326,
-        currency: 'US$',
-        images: ['https://images.pexels.com/photos/1092671/pexels-photo-1092671.jpeg'],
-        rating: 4.4,
-        reviewCount: 200,
-        stock: 8,
-        description: '',
-        seller: { name: 'Samsung', reputation: 'Tienda oficial', isOfficial: true, salesCount: 80000 },
-        specifications: [],
-        paymentMethods: [],
-        shipping: { isFree: true, estimatedDays: '3-5 días', location: 'Envío gratis' }
-      }
-    ];
-
-    return of(relatedProducts);
+  setApiUrl(url: string): void {
+    this.apiUrl = url;
   }
 }
